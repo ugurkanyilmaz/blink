@@ -1,0 +1,172 @@
+// Prisma schema for Blink application
+// PostgreSQL database
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  phone        String   @unique
+  password     String
+  alias        String?
+  alias_tag    String?
+  location_lat Float?
+  location_lon Float?
+  is_banned    Boolean  @default(false)
+  is_active    Boolean  @default(true)
+  completed    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  RefreshTokens    RefreshToken[]
+  SentMessages     Message[]        @relation("SentMessages")
+  ReceivedMessages Message[]        @relation("ReceivedMessages")
+  MatchesAsUserA   Match[]          @relation("UserAMatches")
+  MatchesAsUserB   Match[]          @relation("UserBMatches")
+  Subscriptions    Subscription[]
+  Reports          Report[]         @relation("ReportedBy")
+  ReportsAgainst   Report[]         @relation("ReportedUser")
+  BlocksInitiated  Block[]          @relation("BlockInitiator")
+  BlocksReceived   Block[]          @relation("BlockedUser")
+  Notifications    Notification[]
+  Referrals        Referral[]       @relation("ReferrerUser")
+  ReferredBy       Referral[]       @relation("ReferredUser")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model Message {
+  id         String    @id @default(uuid())
+  senderId   String
+  receiverId String
+  content    String
+  readAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  sender   User @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([senderId, receiverId])
+  @@index([createdAt])
+}
+
+model Match {
+  id        String   @id @default(uuid())
+  userAId   String
+  userBId   String
+  status    String   @default("pending") // pending, accepted, rejected
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userA User @relation("UserAMatches", fields: [userAId], references: [id], onDelete: Cascade)
+  userB User @relation("UserBMatches", fields: [userBId], references: [id], onDelete: Cascade)
+
+  @@unique([userAId, userBId])
+  @@index([userAId])
+  @@index([userBId])
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  userId    String
+  plan      String   // e.g., "free", "premium", "gold"
+  credits   Int      @default(0)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Report {
+  id              String   @id @default(uuid())
+  reporterId      String
+  reportedUserId  String
+  reason          String
+  evidence        String?
+  status          String   @default("pending") // pending, reviewed, resolved
+  createdAt       DateTime @default(now())
+
+  reporter     User @relation("ReportedBy", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportedUser User @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: Cascade)
+
+  @@index([reporterId])
+  @@index([reportedUserId])
+}
+
+model Block {
+  id        String   @id @default(uuid())
+  blockerId String
+  blockedId String
+  createdAt DateTime @default(now())
+
+  blocker User @relation("BlockInitiator", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("BlockedUser", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@index([blockerId])
+  @@index([blockedId])
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Referral {
+  id           String   @id @default(uuid())
+  referrerId   String
+  referredId   String?
+  code         String   @unique
+  rewardClaimed Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  referrer User  @relation("ReferrerUser", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred User? @relation("ReferredUser", fields: [referredId], references: [id], onDelete: Cascade)
+
+  @@index([referrerId])
+  @@index([code])
+}
+
+model Ad {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  imageUrl    String?
+  targetUrl   String?
+  impressions Int      @default(0)
+  clicks      Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+}

@@ -1,0 +1,42 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: blink-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: blinkuser
+      POSTGRES_PASSWORD: blinkpass
+      POSTGRES_DB: blinkdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blinkuser -d blinkdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blink-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://blinkuser:blinkpass@postgres:5432/blinkdb
+      ACCESS_TOKEN_SECRET: your_super_secret_access_token_key_change_in_production
+      REFRESH_TOKEN_SECRET: your_super_secret_refresh_token_key_change_in_production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate deploy --schema=/app/src/prisma/schema.prisma && node dist/server.js"
+
+volumes:
+  postgres_data:

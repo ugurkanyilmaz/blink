@@ -1,0 +1,82 @@
+# Node modules
+**/node_modules/
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.tgz
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Cache directories
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.vuepress/dist
+
+# TypeScript
+*.tsbuildinfo
+
+# Prisma
+api/src/prisma/migrations/**/migration.sql
+
+# Docker volumes
+postgres-data/
+redis-data/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# React Native
+BlinkApp/.expo/
+BlinkApp/.expo-shared/
+BlinkApp/android/app/build/
+BlinkApp/android/.gradle/
+BlinkApp/ios/Pods/
+BlinkApp/ios/build/
+BlinkApp/.bundle/
+
+# Metro
+BlinkApp/.metro-health-check*
