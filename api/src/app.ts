@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
+import profileRoutes from './routes/profile.routes';
 // import other routes as needed
 
 const app = express();
@@ -17,6 +18,7 @@ app.get('/health', (req: Request, res: Response) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/profile', profileRoutes);
 
 // 404 handler
 app.use((req: Request, res: Response) => {

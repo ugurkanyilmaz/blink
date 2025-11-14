@@ -1,68 +1,77 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-# Blink App - React Native
+# Getting Started
 
-Video sohbet ve mesajlaşma uygulaması.
+> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
-## Kurulum
+## Step 1: Start Metro
 
-### 1. Bağımlılıkları yükle
-```bash
-npm install
+First, you will need to run **Metro**, the JavaScript build tool for React Native.
+
+To start the Metro dev server, run the following command from the root of your React Native project:
+
+```sh
+# Using npm
+npm start
+
+# OR using Yarn
+yarn start
 ```
 
-### 2. iOS için (sadece macOS)
-```bash
-cd ios
-pod install
-cd ..
-```
+## Step 2: Build and run your app
 
-### 3. Backend'i başlat
-Backend'in Docker'da çalıştığından emin olun:
-```bash
-# Ana dizinde (c:\blink)
-docker-compose up -d
-```
-
-## Geliştirme
+With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
 
 ### Android
-```bash
+
+```sh
+# Using npm
 npm run android
+
+# OR using Yarn
+yarn android
 ```
 
-### iOS (sadece macOS)
-```bash
+### iOS
+
+For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+
+The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+
+```sh
+bundle install
+```
+
+Then, and every time you update your native dependencies, run:
+
+```sh
+bundle exec pod install
+```
+
+For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+
+```sh
+# Using npm
 npm run ios
+
+# OR using Yarn
+yarn ios
 ```
 
-## Backend Bağlantısı
+If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
 
-Backend API Docker'da çalışıyor: `http://localhost:3000`
+This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
-- **Android Emulator**: `http://10.0.2.2:3000`
-- **iOS Simulator**: `http://localhost:3000`
-- **Gerçek Cihaz**: Bilgisayarınızın IP adresini kullanın (örn: `http://192.168.1.100:3000`)
+## Step 3: Modify your app
 
-API konfigürasyonunu `src/utils/api.ts` dosyasından değiştirebilirsiniz.
+Now that you have successfully run the app, let's make changes!
 
-## Özellikler
+Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
 
-- ✅ Kullanıcı kayıt/giriş
-- ✅ JWT token authentication
-- ✅ Otomatik token yenileme
-- ⏳ Video sohbet
-- ⏳ Mesajlaşma
-- ⏳ Eşleşme sistemi
+When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
 
-## Teknolojiler
-
-- React Native 0.82
-- React Navigation
-- Axios
-- AsyncStorage
-- TypeScript
+- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
+- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
 
 ## Congratulations! :tada:
 

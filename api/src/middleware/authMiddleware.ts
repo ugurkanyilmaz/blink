@@ -4,6 +4,10 @@ import { verifyAccessToken } from "../utils/jwt";
 
 interface AuthRequest extends Request {
     userId?: string;
+    user?: {
+        id: string;
+        phone: string;
+    };
 }
 
 export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -16,6 +20,10 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     try {
         const payload = verifyAccessToken(token);
         req.userId = (payload as any).id;
+        req.user = {
+            id: (payload as any).id,
+            phone: (payload as any).phone
+        };
         next();
     } catch (err) {
         return res.status(401).json({ error: "Invalid or expired token" });
