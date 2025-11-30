@@ -1,11 +1,16 @@
-/*
-  Database connection (Prisma client)
+import { PrismaClient } from '@prisma/client';
 
-  Planned contents:
-  - Initialize and export PrismaClient instance
-  - Provide small helpers for transactions and graceful disconnect
-  - Consider adding a wrapper to retry transient connection failures
+// Create a singleton PrismaClient to avoid exhausting connections during
+// hot-reload in development environments.
+declare global {
+  // eslint-disable-next-line no-var
+  var __prisma: PrismaClient | undefined;
+}
 
-  Important:
-  - Do NOT import this file from places that run at module-eval time in tests if you want to mock Prisma.
-*/
+const prisma = global.__prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== 'production') {
+  global.__prisma = prisma;
+}
+
+export default prisma;

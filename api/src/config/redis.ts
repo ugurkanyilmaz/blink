@@ -1,11 +1,11 @@
-/*
-  Redis connection helper (optional)
+import ioredis from "ioredis";
+import config from "./env";
 
-  Planned contents:
-  - Initialize and export an ioredis client instance
-  - Utilities for pub/sub channels used by sockets or notifications
-  - Helper functions for caching and locking primitives
+const redis = new ioredis({
+    host: config.redis.host,
+    port: config.redis.port,
+    password: config.redis.password,
+    db: config.redis.db,
+});
 
-  Notes:
-  - Keep connection logic resilient to reconnects and surface errors for monitoring
-*/
+export default redis;

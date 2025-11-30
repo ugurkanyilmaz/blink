@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { prisma } from '../prisma/client';
+import prisma from '../config/db';
 
 export const getProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
-    
+
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
@@ -19,6 +19,7 @@ export const getProfile = async (req: Request, res: Response) => {
         location_lat: true,
         location_lon: true,
         completed: true,
+        birthDate: true,
         createdAt: true,
       },
     });
@@ -37,7 +38,7 @@ export const getProfile = async (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
-    const { alias, alias_tag, location_lat, location_lon } = req.body;
+    const { alias, alias_tag, location_lat, location_lon, birthDate } = req.body;
 
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
@@ -56,8 +57,17 @@ export const updateProfile = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Location is required' });
     }
 
+    if (!birthDate) {
+      return res.status(400).json({ error: 'Birth date is required' });
+    }
+
+    const birthDateObj = new Date(birthDate);
+    if (isNaN(birthDateObj.getTime())) {
+      return res.status(400).json({ error: 'Invalid birth date format' });
+    }
+
     // Check if all required fields are provided to mark profile as completed
-    const completed = !!(alias && alias_tag && location_lat && location_lon);
+    const completed = !!(alias && alias_tag && location_lat && location_lon && birthDate);
 
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -66,6 +76,7 @@ export const updateProfile = async (req: Request, res: Response) => {
         alias_tag: alias_tag.trim(),
         location_lat: parseFloat(location_lat),
         location_lon: parseFloat(location_lon),
+        birthDate: birthDateObj,
         completed,
       },
       select: {
@@ -76,6 +87,7 @@ export const updateProfile = async (req: Request, res: Response) => {
         location_lat: true,
         location_lon: true,
         completed: true,
+        birthDate: true,
         createdAt: true,
       },
     });

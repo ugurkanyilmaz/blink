@@ -9,6 +9,7 @@ interface AuthContextType {
   login: (phone: string, password: string) => Promise<void>;
   register: (phone: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,6 +32,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const refreshUser = async () => {
+    await loadUser();
   };
 
   const login = async (phone: string, password: string) => {
@@ -70,6 +75,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
         register,
         logout,
+        refreshUser,
       }}
     >
       {children}

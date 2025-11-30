@@ -22,7 +22,7 @@ type MatchScreenProps = NativeStackScreenProps<RootStackParamList, 'Match'>;
 const MatchScreen = ({ navigation }: MatchScreenProps) => {
   const [loading, setLoading] = useState(true);
   const [showOptions, setShowOptions] = useState(false);
-  
+
   const mainButtonScale = useRef(new Animated.Value(1)).current;
   const mainButtonOpacity = useRef(new Animated.Value(1)).current;
   const optionsOpacity = useRef(new Animated.Value(0)).current;
@@ -35,7 +35,7 @@ const MatchScreen = ({ navigation }: MatchScreenProps) => {
   const checkProfileCompletion = async () => {
     try {
       const profile = await profileService.getProfile();
-      
+
       if (!profile.completed) {
         navigation.replace('ProfileSetup');
       } else {
@@ -102,7 +102,7 @@ const MatchScreen = ({ navigation }: MatchScreenProps) => {
           </View>
 
           {!showOptions ? (
-            <Animated.View 
+            <Animated.View
               style={[
                 styles.mainButtonContainer,
                 {
@@ -122,7 +122,7 @@ const MatchScreen = ({ navigation }: MatchScreenProps) => {
               </TouchableOpacity>
             </Animated.View>
           ) : (
-            <Animated.View 
+            <Animated.View
               style={[
                 styles.optionsContainer,
                 {
@@ -144,7 +144,12 @@ const MatchScreen = ({ navigation }: MatchScreenProps) => {
 
               <TouchableOpacity
                 style={styles.optionButton}
-                onPress={() => navigation.navigate('VideoMatching')}
+                onPress={() => {
+                  // navigation.navigate('VideoMatching');
+                  // Show coming soon alert
+                  const { Alert } = require('react-native');
+                  Alert.alert('Coming Soon', 'This feature will be available soon!');
+                }}
                 activeOpacity={0.8}>
                 <LinearGradient
                   colors={['#FF00FF', '#D400D4']}

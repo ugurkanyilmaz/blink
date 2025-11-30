@@ -2,55 +2,63 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useAuth } from '../context/AuthContext';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const BottomNav = () => {
-  const navigation = useNavigation<NavigationProp>();
-  const route = useRoute();
-  const { logout } = useAuth();
+type BottomNavProps = {
+  currentRouteName?: keyof RootStackParamList;
+};
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Welcome' }],
-      });
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
+const BottomNav = ({ currentRouteName }: BottomNavProps) => {
+  const navigation = useNavigation<NavigationProp>();
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={[styles.tab, route.name === 'Match' && styles.activeTab]}
+        style={styles.tab}
         onPress={() => navigation.navigate('Match')}
         activeOpacity={0.7}>
-        <Text style={[styles.tabText, route.name === 'Match' && styles.activeTabText]}>
+        <Icon
+          name="heart"
+          size={24}
+          color={currentRouteName === 'Match' ? '#00FFFF' : 'rgba(255, 255, 255, 0.6)'}
+        />
+        <Text style={[styles.tabText, currentRouteName === 'Match' && styles.activeTabText]}>
           Match
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.tab, route.name === 'ProfileSetup' && styles.activeTab]}
-        onPress={() => navigation.navigate('ProfileSetup')}
+        style={styles.tab}
+        onPress={() => navigation.navigate('Messages')}
         activeOpacity={0.7}>
-        <Text style={[styles.tabText, route.name === 'ProfileSetup' && styles.activeTabText]}>
-          Profile
+        <Icon
+          name="chatbubbles"
+          size={24}
+          color={currentRouteName === 'Messages' ? '#00FFFF' : 'rgba(255, 255, 255, 0.6)'}
+        />
+        <Text style={[styles.tabText, currentRouteName === 'Messages' && styles.activeTabText]}>
+          Messages
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.tab}
-        onPress={handleLogout}
+        onPress={() => navigation.navigate('Profile')}
         activeOpacity={0.7}>
-        <Text style={styles.logoutText}>Logout</Text>
+        <Icon
+          name="person"
+          size={24}
+          color={currentRouteName === 'Profile' ? '#00FFFF' : 'rgba(255, 255, 255, 0.6)'}
+        />
+        <Text style={[styles.tabText, currentRouteName === 'Profile' && styles.activeTabText]}>
+          Profile
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -73,27 +81,19 @@ const styles = StyleSheet.create({
   tab: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 12,
-  },
-  activeTab: {
-    borderBottomWidth: 3,
-    borderBottomColor: '#00FFFF',
+    justifyContent: 'center',
+    paddingVertical: 8,
   },
   tabText: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '600',
     color: 'rgba(255, 255, 255, 0.6)',
     letterSpacing: 0.5,
+    marginTop: 4,
   },
   activeTabText: {
     color: '#00FFFF',
     fontWeight: '700',
-  },
-  logoutText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FF4444',
-    letterSpacing: 0.5,
   },
 });
 

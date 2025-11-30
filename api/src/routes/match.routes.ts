@@ -1,8 +1,9 @@
-/*
-  Match routes
+import { Router } from 'express';
+import { getMatches } from '../controllers/match.controller';
+import { authMiddleware } from '../middleware/authMiddleware';
 
-  Planned endpoints (examples):
-  - POST /match/swipe    -> record swipe/like/dislike
-  - GET  /match/list     -> return potential matches
-  - POST /match/:id/accept -> accept a match
-*/
+const router = Router();
+
+router.get('/', authMiddleware, getMatches);
+
+export default router;

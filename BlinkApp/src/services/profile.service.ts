@@ -10,14 +10,17 @@ export interface Profile {
   location_lat: number | null;
   location_lon: number | null;
   completed: boolean;
+  birthDate?: string | null;
+  is_profile_completed?: boolean;
   createdAt: string;
 }
 
 export interface UpdateProfileData {
-  alias: string;
-  alias_tag: string;
-  location_lat: number;
-  location_lon: number;
+  alias?: string;
+  alias_tag?: string;
+  location_lat?: number;
+  location_lon?: number;
+  birthDate?: string;
 }
 
 export const profileService = {

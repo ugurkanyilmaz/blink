@@ -21,6 +21,7 @@ model User {
   is_banned    Boolean  @default(false)
   is_active    Boolean  @default(true)
   completed    Boolean  @default(false)
+  birthDate    DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
